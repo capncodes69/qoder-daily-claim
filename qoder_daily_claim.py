@@ -293,15 +293,25 @@ def main() -> int:
             if already:
                 print("[done] already claimed today — nothing to do")
                 return 0
-            # A VIEW_DETAILS campaign is a promo banner: claiming one is
-            # accepted (200 CLAIMED) but grants nothing — measured on a live
-            # account, plan/credits unchanged before, after, and 30 s later.
-            # The credit campaign rotates in and out through the day, so the
-            # honest answer is "come back later", not an error.
-            print("[done] no CLAIM_BENEFIT campaign on offer right now. A "
-                  "VIEW_DETAILS entry is a promo banner — claiming it grants "
-                  "nothing. The daily credit campaign rotates in through the "
-                  "day; re-run this script later (or check --status).")
+            # Two measured reasons an account sees only the VIEW_DETAILS
+            # banner (claiming one is accepted but grants nothing):
+            #   1. The account is PLAN_TIER_FREE — the daily 100 campaign is
+            #      only offered to accounts with an active plan (PRO_TRIAL or
+            #      a subscription). A FREE account never gets the entry.
+            #   2. An account with a plan but no campaign on offer right now —
+            #      it rotates; re-run after the daily reset (10:00 UTC+8).
+            qd = usage(job_token, ident, args.proxy) or {}
+            plan = str(qd.get("plan") or "")
+            if "TRIAL" in plan.upper() or "PRO" in plan.upper() or "LITE" in plan.upper():
+                print(f"[done] plan is {plan} but no CLAIM_BENEFIT campaign is "
+                      "on offer right now — it rotates. Re-run after the daily "
+                      "reset (10:00 UTC+8).")
+            else:
+                print(f"[done] plan is {plan or 'FREE'} — the daily 100-credit "
+                      "campaign is only offered to accounts with an active "
+                      "plan (PRO_TRIAL or a subscription). Start a trial from "
+                      "the Qoder client (sign in once) to become eligible; "
+                      "claiming the VIEW_DETAILS banner grants nothing.")
             return 1
 
         for c in claimable:

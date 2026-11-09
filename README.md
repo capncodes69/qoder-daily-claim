@@ -49,6 +49,17 @@ with `pt-`.
 - The script never stores or logs your PAT; it is used for the token exchange
   and then only the short-lived jobToken travels.
 
+## Requirements to be eligible
+
+The daily 100-credit campaign is only offered to accounts with an **active
+plan** — PRO_TRIAL or a subscription. A free account (`PLAN_TIER_FREE`) sees
+only a `VIEW_DETAILS` promo banner, and claiming that grants nothing (it
+answers `200 CLAIMED` with zero credits awarded — measured). If your account
+is fresh/free: sign in once with the Qoder client to start the trial, then
+this script can claim the daily credits.
+
+The daily campaign resets at **10:00 UTC+8**; the claim is valid 30 days.
+
 ## Exit codes
 
 | code | meaning |
