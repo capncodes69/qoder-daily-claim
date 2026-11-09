@@ -276,7 +276,8 @@ def main() -> int:
             state = (f"{c['claimStatus']}"
                      + (f" · {c['reason']}" if c["reason"] else "")
                      + (" · DEVICE OCCUPIED BY ANOTHER" if c["deviceOccupiedByOthers"] else ""))
-            print(f"      - {c['key'] or c['name']}: {c['actionType']} · {state}")
+            cid = f" · id {c['id'][:8]}…" if c["id"] else " · no id"
+            print(f"      - {c['key'] or c['name']}: {c['actionType']} · {state}{cid}")
 
         claimable = [c for c in camps
                      if c["actionType"] == CLAIM_ACTION
@@ -292,8 +293,15 @@ def main() -> int:
             if already:
                 print("[done] already claimed today — nothing to do")
                 return 0
-            print("[done] nothing claimable (no CLAIM_BENEFIT campaign in "
-                  "CLAIMABLE state with a UUID id)")
+            # A VIEW_DETAILS campaign is a promo banner: claiming one is
+            # accepted (200 CLAIMED) but grants nothing — measured on a live
+            # account, plan/credits unchanged before, after, and 30 s later.
+            # The credit campaign rotates in and out through the day, so the
+            # honest answer is "come back later", not an error.
+            print("[done] no CLAIM_BENEFIT campaign on offer right now. A "
+                  "VIEW_DETAILS entry is a promo banner — claiming it grants "
+                  "nothing. The daily credit campaign rotates in through the "
+                  "day; re-run this script later (or check --status).")
             return 1
 
         for c in claimable:
