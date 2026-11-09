@@ -49,16 +49,22 @@ with `pt-`.
 - The script never stores or logs your PAT; it is used for the token exchange
   and then only the short-lived jobToken travels.
 
-## Requirements to be eligible
+## Eligibility
 
-The daily 100-credit campaign is only offered to accounts with an **active
-plan** — PRO_TRIAL or a subscription. A free account (`PLAN_TIER_FREE`) sees
-only a `VIEW_DETAILS` promo banner, and claiming that grants nothing (it
-answers `200 CLAIMED` with zero credits awarded — measured). If your account
-is fresh/free: sign in once with the Qoder client to start the trial, then
-this script can claim the daily credits.
+Per the [official docs](https://docs.qoder.com/events/100credits), all
+individual users are eligible — free included. **However**, measured over the
+API this script uses, the daily campaign entry only appears in the campaign
+list once the account has an **active trial or plan**: a fresh free account,
+and an account whose trial expired, both see only the promo banner (claiming
+that grants nothing — `200 CLAIMED`, zero credits awarded). If your free
+account gets "no CLAIM_BENEFIT campaign": sign in once in the Qoder desktop
+app — that starts the free Pro Trial (300 credits) — and the daily claim
+becomes visible here too. The docs also note rewards must be claimed in the
+desktop app's usage panel; this script drives the same claim endpoint that
+panel uses.
 
-The daily campaign resets at **10:00 UTC+8**; the claim is valid 30 days.
+The daily campaign resets at **10:00 UTC+8**; each reward is valid 30 days
+and unexpired credits stack.
 
 ## Exit codes
 

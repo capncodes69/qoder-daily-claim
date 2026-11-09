@@ -293,13 +293,14 @@ def main() -> int:
             if already:
                 print("[done] already claimed today — nothing to do")
                 return 0
-            # Two measured reasons an account sees only the VIEW_DETAILS
-            # banner (claiming one is accepted but grants nothing):
-            #   1. The account is PLAN_TIER_FREE — the daily 100 campaign is
-            #      only offered to accounts with an active plan (PRO_TRIAL or
-            #      a subscription). A FREE account never gets the entry.
-            #   2. An account with a plan but no campaign on offer right now —
-            #      it rotates; re-run after the daily reset (10:00 UTC+8).
+            # The official docs (docs.qoder.com/events/100credits) say free
+            # users ARE eligible — but measured over the API, the daily
+            # campaign entry only appears in the list for accounts whose
+            # trial/plan is active (PRO_TRIAL and up). A free account that
+            # never signed in on the desktop client, and an expired trial,
+            # both see only the VIEW_DETAILS banner. So the practical advice:
+            # sign in once in the Qoder desktop app (that starts the Pro
+            # Trial) and the daily claim becomes visible to this script too.
             qd = usage(job_token, ident, args.proxy) or {}
             plan = str(qd.get("plan") or "")
             if "TRIAL" in plan.upper() or "PRO" in plan.upper() or "LITE" in plan.upper():
@@ -307,11 +308,13 @@ def main() -> int:
                       "on offer right now — it rotates. Re-run after the daily "
                       "reset (10:00 UTC+8).")
             else:
-                print(f"[done] plan is {plan or 'FREE'} — the daily 100-credit "
-                      "campaign is only offered to accounts with an active "
-                      "plan (PRO_TRIAL or a subscription). Start a trial from "
-                      "the Qoder client (sign in once) to become eligible; "
-                      "claiming the VIEW_DETAILS banner grants nothing.")
+                print(f"[done] plan is {plan or 'FREE'} — the campaign API is "
+                      "not offering the daily 100 to this account. Docs say "
+                      "free users are eligible, but the entry only appears "
+                      "once the account has an active trial/plan: sign in "
+                      "once in the Qoder desktop app (starts the free Pro "
+                      "Trial + 300 credits), then re-run this script. The "
+                      "VIEW_DETAILS banner itself grants nothing.")
             return 1
 
         for c in claimable:
